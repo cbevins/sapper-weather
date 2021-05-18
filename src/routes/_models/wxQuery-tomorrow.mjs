@@ -3,7 +3,7 @@
  */
 import fetch from 'node-fetch'
 import queryString from 'query-string'
-import { tomorrow } from './apis.js'
+import { key } from './tomorrowApiKey.js'
 
 /**
  * Retrieves hourly weather forecast from tomorrow.io
@@ -18,10 +18,9 @@ import { tomorrow } from './apis.js'
  * @returns {array} Array of hourly weather records dictated by the *format* arg.
  */
 export const getTimelines = async (lat, lon, startTime, endTime, timezone = 'UTC', format = 'fire') => {
-  let url = tomorrow.url // 'https://api.tomorrow.io/v4/timelines'
+  let url = 'https://api.tomorrow.io/v4/timelines'
   try {
     // set the Timelines GET endpoint as the target URL
-    const apikey = tomorrow.key // get your key from app.tomorrow.io/development/keys
     const location = [lat, lon] // pick the location, as a lat, lon pair
     const units = 'imperial' // choose the unit system, either 'metric' or 'imperial'
     const timesteps = ['1h'] // set the timesteps, like "current", "1h" and "1d"
@@ -59,7 +58,7 @@ export const getTimelines = async (lat, lon, startTime, endTime, timezone = 'UTC
 
     // request the timelines with all the query string parameters as options
     const parms = queryString.stringify({
-      apikey,
+      key,
       location,
       fields,
       units,
