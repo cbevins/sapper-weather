@@ -3,3 +3,6 @@
 /src/node_modules/@sapper/
 yarn-error.log
 /__sapper__/
+/src/routes/_forecast/_apiKeys.mjs
+/src/routes/_models/apis.js
+/src/routes/_models/weatherApiKey.js
