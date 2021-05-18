@@ -1,0 +1,30 @@
+{
+  "name": "TODO",
+  "description": "TODO",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "sapper dev",
+    "build": "sapper build",
+    "export": "sapper export",
+    "start": "node __sapper__/build"
+  },
+  "dependencies": {
+    "axios": "0.21.1",
+    "bootstrap": "5.0.1",
+    "compression": "^1.7.1",
+    "express": "4.17.1",
+    "moment": "2.29.1",
+    "node-fetch": "2.6.1",
+    "polka": "next",
+    "query-string": "7.0.0",
+    "sirv": "^1.0.0"
+  },
+  "devDependencies": {
+    "sapper": "^0.28.0",
+    "svelte": "^3.17.3",
+    "file-loader": "^6.0.0",
+    "svelte-loader": "^3.0.0",
+    "webpack": "^4.46.0",
+    "webpack-modules": "^1.0.0"
+  }
+}
