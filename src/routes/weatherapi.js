@@ -1,10 +1,11 @@
 import fetch from 'node-fetch'
-import { key } from './_models/weatherApiKey.js'
+// import { key } from './_models/weatherApiKey.js'
 
 export async function post (req, res, next) {
   try {
     console.log('server: BEGIN post()')
     const url = 'http://api.weatherapi.com/v1/forecast.json'
+    const key = '43956b1f6760417db1d182743212704'
     const {lat, lon, days} = req.body
     // 'q' can be a US Zipcode, UK Postcode, Canada Postalcode, IP address, Latitude/Longitude (decimal degree) or city name.
     const q = `${lat},${lon}` // '46.85714,-114.0073'
