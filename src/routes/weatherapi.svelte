@@ -10,7 +10,7 @@
   let lon = -113.975528
   let timezone = 'America/Denver'
 
-  // Fixed
+  // These are fixed
   let days = 1
   let hours = 4
   let error = null
@@ -19,16 +19,14 @@
   const getWeather = async () => {
     console.log('client: BEGIN weather.svelte: getWeather()')
     buttonText = 'Getting weather data from weatherapi.com ...'
+    const url = 'http://api.weatherapi.com/v1/forecast.json'
+    const key = '43956b1f6760417db1d182743212704'
+    const query = `${url}?key=${key}&days=${days}&q=${lat},${lon}&aqi=no&alerts=no`
     try {
-      const response = await fetch("weatherapi", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ lat, lon, days, timezone, hours }),
-      });
-      wx = await response.json()
+      let promise = await fetch(query, { method: 'GET' })
+        .catch((error) => console.error('weatherapi forecast error: ' + error))
+      wx = await promise.json()
+      console.log(wx)
       buttonText = 'Update Weather'
     } catch (error) {
       console.log('client: ERROR weather.svelte: ', error)
