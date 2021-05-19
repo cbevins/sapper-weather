@@ -19,7 +19,7 @@
   const getWeather = async () => {
     console.log('client: BEGIN weather.svelte: getWeather()')
     buttonText = 'Getting weather data from weatherapi.com ...'
-    const url = 'http://api.weatherapi.com/v1/forecast.json'
+    const url = 'https://api.weatherapi.com/v1/forecast.json'
     const key = '43956b1f6760417db1d182743212704'
     const query = `${url}?key=${key}&days=${days}&q=${lat},${lon}&aqi=no&alerts=no`
     try {
