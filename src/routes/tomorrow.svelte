@@ -1,14 +1,15 @@
 <script>
   import { loc, twx } from './_stores.js'
   import { get } from './_tomorrow.js'
+  import LatLonForm from '../components/LatLonForm.svelte'
   import Hourly from '../components/TomorrowHourlyTable.svelte'
 
   let hours = 72
-  let buttonText = 'Update Weather'
+  let loading = false
   const getWeather = async () => {
-    buttonText = 'Getting weather data from tomorrow.io ...'
+    loading = true
     $twx = await get($loc.lat, $loc.lon, $loc.tz, hours)
-    buttonText = 'Update Weather'
+    loading = false
   }
 </script>
 
@@ -17,10 +18,9 @@
 </svelte:head>
 
 <h1>Weather Forecast</h1>
-<input bind:value={$loc.lat}>
-<input bind:value={$loc.lon}>
+<LatLonForm/>
 <button on:click={getWeather}>
-  {buttonText}
+  {loading ? 'Getting forecast from tomorrow.io ...' : 'Update Forecast'}
 </button>
 
 {#if $twx !== null}

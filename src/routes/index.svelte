@@ -1,6 +1,5 @@
 <script>
 	import successkid from 'images/successkid.jpg';
-  console.log('home.svelte')
 </script>
 
 <style>
@@ -10,9 +9,9 @@
 	}
 
 	h1 {
-		font-size: 2.8em;
+		font-size: 2.0em;
 		text-transform: uppercase;
-		font-weight: 700;
+		font-weight: 500;
 		margin: 0 0 0.5em 0;
 	}
 
@@ -38,14 +37,14 @@
 </style>
 
 <svelte:head>
-	<title>Sapper project template</title>
+	<title>Fire Forecast</title>
 </svelte:head>
 
-<h1>Great success!</h1>
-
+<h1>Fire Forecast</h1>
+<p>View a 3-day fire weather, fuel moisture, and fire behavior forecast
+  for anywhere in the world!
+</p>
 <figure>
-	<img alt="Success Kid" src="{successkid}">
-	<figcaption>Have fun with Sapper!</figcaption>
+	<img alt="SEM" src="./Wildfire.jpg">
+	<figcaption>Systems for Environmental Management</figcaption>
 </figure>
-
-<p><strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong></p>
