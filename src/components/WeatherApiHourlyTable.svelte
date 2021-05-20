@@ -6,7 +6,7 @@
 
 <div class="card">
   <div class="card-body">
-    <h3 class="card-title">Hourly Forecast for {date}</h3>
+    <h3 class="card-title">WeatherApi.com Hourly Forecast for {date}</h3>
 
     <div class="table-responsive">
       <table class="table table-sm table-striped table-bordered border-primary">
@@ -27,8 +27,7 @@
             <th scope="col">oF</th><th scope="col">%</th><th scope="col">oF</th><th scope="col">Like</th>
             <th scope="col">Code</th><th scope="col">Text</th>
             <th scope="col">mi/h</th><th scope="col">Gust</th><th scope="col">From</th><th scope="col">Dir</th>
-            <th scope="col">Prob</th>
-            <th scope="col">in</th>
+            <th scope="col">Prob</th><th scope="col">in</th>
             <th scope="col">Cover</th>
             <th scope="col">mi</th>
             <th scope="col">Idx</th>
