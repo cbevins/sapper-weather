@@ -22,8 +22,10 @@
   Weather Forecast
 </h1>
 
-<LatLonForm/>
-<button on:click={getWeather}>
-  {loading ? 'Getting forecast from weatherapi.com ...' : 'Update Forecast'}
-</button>
+<LatLonForm callback={getWeather} />
+
+{#if loading}
+  <h3>Fetching forecast data from WeatherApi.com ...</h3>
+{/if}
+
 <Forecast wx={$wwx}/>

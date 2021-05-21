@@ -18,10 +18,11 @@
 </svelte:head>
 
 <h1>Weather Forecast</h1>
-<LatLonForm/>
-<button on:click={getWeather}>
-  {loading ? 'Getting forecast from tomorrow.io ...' : 'Update Forecast'}
-</button>
+<LatLonForm callback={getWeather} />
+
+{#if loading}
+  <h1>Fetching forecast from tomorrow.io ...</h1>
+{/if}
 
 {#if $twx !== null}
   {#if $twx.status !== 200}

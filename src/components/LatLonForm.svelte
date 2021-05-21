@@ -1,20 +1,25 @@
 <script>
   import {loc} from '../routes/_stores.js'
+  export let callback
 </script>
 
-<div class="row mb-3">
-  <label for="lat" class="col-sm-2 col-form-label">Latitude</label>
+<div class="row mb-1">
   <div class="col-auto">
-    <input bind:value={$loc.lat} class="form-control" id="lat"
-      type='text' pattern="[0-9/-]" maxlength='12' aria-describedby="latHelp">
+    <div class="input-group input-group-sm mb-1">
+
+      <span class="input-group-text" id="latHelp">Lat</span>
+
+      <input bind:value={$loc.lat} class="form-control" id="lat"
+        type='text' aria-describedby="latHelp">
+
+      <span class="input-group-text" id="lonHelp">Lon</span>
+
+      <input bind:value={$loc.lon} class="form-control" id="lon"
+        type='text' aria-describedby="lonHelp">
+
+      <button  on:click={callback}
+        class="btn btn-outline-secondary" type="button" id="button">Update</button>
+
+    </div>
   </div>
-  <div id="latHelp" class="form-text">Latitude decimal degrees north (+) or south (-) of equator.</div>
-</div>
-<div class="row mb-3">
-  <label for="lon" class="col-sm-2 col-form-label">Longitude</label>
-  <div class="col-auto">
-    <input bind:value={$loc.lon} class="form-control" id="lon"
-      type='text' pattern="[0-9/-]" maxlength='12' aria-describedby="lonHelp">
-  </div>
-  <div id="lonHelp" class="form-text">Longitude decimal degrees east (+) or west (-) of Greenwich.</div>
 </div>
