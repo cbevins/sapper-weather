@@ -4,11 +4,12 @@
   import Hourly from './WeatherApiHourlyTable.svelte'
 
   export let wx
+  export let esa
   let prev // used to break forecast array into daily chunks
 </script>
 
 {#if wx !== null}
-  <Current location={wx.location} current={wx.current} />
+  <Current location={wx.location} esa={esa} current={wx.current} />
   {#each wx.forecast.forecastday as day}
     {#if day.date !== prev}
       <h1>{day.date}</h1>

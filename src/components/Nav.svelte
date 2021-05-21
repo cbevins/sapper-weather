@@ -54,5 +54,6 @@
 		<li><a aria-current="{segment === 'about' ? 'page' : undefined}" href="about">about</a></li>
 		<li><a aria-current="{segment === 'weatherapi' ? 'page' : undefined}" href="weatherapi">weatherapi.com</a></li>
 		<li><a aria-current="{segment === 'tomorrow' ? 'page' : undefined}" href="tomorrow">tomorrow.io</a></li>
+		<li><a aria-current="{segment === 'esa' ? 'page' : undefined}" href="esa">Elev/Slope/Aspect</a></li>
 	</ul>
 </nav>

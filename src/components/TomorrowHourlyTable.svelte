@@ -1,14 +1,8 @@
 <script>
+  import { compassDir } from '../routes/_slopeAspect.js'
   export let twx
   let hours
   $: hours = (twx === null) ? null : twx.data.timelines[0].intervals
-
-  function dirText (deg) {
-    const text = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N']
-    const arc = 360 / 16 // 22.5
-    const segment = Math.trunc((deg + arc/2) / arc)
-    return text[segment]
-  }
 
   const SowText = new Map([
     ['0', 'Unknown'],
@@ -90,7 +84,7 @@
               <td>{Math.round(h.values.windSpeed)}</td>
               <td>{Math.round(h.values.windGust)}</td>
               <td>{Math.round(h.values.windDirection)}</td>
-              <td>{dirText(h.values.windDirection)}</td>
+              <td>{compassDir(h.values.windDirection)}</td>
               <td>{h.values.precipitationProbability}</td>
               <td>{h.values.precipitationIntensity}</td>
               <td>{Math.round(h.values.cloudCover)}</td>
