@@ -66,7 +66,7 @@ export function locationGrid (lat0, lon0, sampleRes, cellWidth) {
       cells.push({ lat, lon })
     })
   })
-  return { cells, nsMeters, ewMeters, nsDegrees, ewDegrees, sampleRes, cellWidth }
+  return { cells, nsMeters, ewMeters, nsDegrees, ewDegrees, sampleRes, cellWidth, lat: lat0, lon: lon0 }
 }
 
 export function slope (z, xdim, ydim) {

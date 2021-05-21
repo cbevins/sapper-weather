@@ -1,7 +1,8 @@
 /**
  * MapQuest Developer Open Elevation API
  */
-import { locationGrid, slopeAspect } from './_slopeAspect.js'
+import { esaFinish } from './_esaFinish.js'
+import { locationGrid } from './_slopeAspect.js'
 
 /**
  * Returns elevation, slope, and aspect at a point using MapQuest Developer Open Elevation API
@@ -20,26 +21,26 @@ export const mapquestEsa = async (lat0, lon0, sampleRes, cellWidth) => {
 
     // Get a 3x3 grid of *equi-distant* (meters, not degrees) sample points
     const loc = locationGrid(lat0, lon0, sampleRes, cellWidth)
+
     // Create query string of cell center [lat,lon] pairs
     let points = 'latLngCollection='
     loc.cells.forEach(cell => { points += `${cell.lat},${cell.lon},` })
     const query = url + parms + points
 
+    // Make the request and await the response
     const response = await fetch(query, { method: 'GET' })
       .catch((error) => console.error('mapquest.com fetch error: ' + error))
     const json = await response.json()
-    // Repackage response
-    const elevationGrid = json.elevationProfile.map(e => e.height)
 
-    // Add elevations to the *loc.cells* object array and also center elev, slope, aspect
-    const [slope, aspect] = slopeAspect(elevationGrid, 3.2808 * loc.ewMeters, 3.2808 * loc.nsMeters)
-    json.elevationProfile.forEach((e, idx) => { loc.cells[idx].elev = e.height })
-    loc.lat = lat0
-    loc.lon = lon0
-    loc.elev = elevationGrid[4]
-    loc.slopeDeg = slope
-    loc.slopeRatio = Math.tan(slope * Math.PI / 180)
-    loc.aspect = aspect
+    // Repackage response into 3x3 elevation grid in meters
+    const elevationGrid = []
+    json.elevationProfile.forEach((e, idx) => {
+      elevationGrid.push(e.height)
+      loc.cells[idx].elev = e.height // add individual cell elevations
+    })
+
+    // Add elevations to the *loc.cells* object array and also center cell's elev, slope, aspect
+    esaFinish(loc, elevationGrid)
     return loc
   } catch (error) {
     console.log(`mapquest.mjs error`, error)

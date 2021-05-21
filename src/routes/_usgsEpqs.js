@@ -16,23 +16,27 @@ import { locationGrid, slopeAspect } from './_slopeAspect.js'
 export const usgsEsa = async (lat0, lon0, sampleRes, cellWidth) => {
   try {
     const url = 'https://nationalmap.gov/epqs/pqs.php?units=Feet&output=json&'
+
     const loc = locationGrid(lat0, lon0, sampleRes, cellWidth)
 
+    // Create query string of cell center [lat,lon] pairs
     const requests = []
     loc.cells.forEach(cell => {
       requests.push(axios.get(url + `x=${cell.lon}&y=${cell.lat}`))
     })
+
+    // Make the request and await all the responses
     const responses = await axios.all(requests)
 
-    // Repackage response
+    // Repackage response into 3x3 elevation grid in meters
     const elevationGrid = []
     responses.forEach((res, idx) => {
       const data = res.data.USGS_Elevation_Point_Query_Service.Elevation_Query
       elevationGrid.push(data.Elevation)
-      loc.cells[idx].elev = data.Elevation
+      loc.cells[idx].elev = data.Elevation // add individual cell elevations
     })
 
-    // Add elevations to the *loc.cells* object array and also center elev, slope, aspect
+    // Add elevations to the *loc.cells* object array and also center cell's elev, slope, aspect
     const [slope, aspect] = slopeAspect(elevationGrid, 3.2808 * loc.ewMeters, 3.2808 * loc.nsMeters)
     loc.lat = lat0
     loc.lon = lon0

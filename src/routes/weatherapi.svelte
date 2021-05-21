@@ -1,10 +1,10 @@
 <script>
-  import { loc, mel, uel, wwx } from './_stores.js'
+  import { gel, loc, mel, uel, wwx } from './_stores.js'
+  import { gmapEsa } from './_gmapElev.js'
   import { mapquestEsa } from './_mapquest.js'
   import { usgsEsa } from './_usgsEpqs.js'
   import { get } from './_weatherApi.js'
 
-  import EsaComparisonTable from '../components/EsaComparisonTable.svelte'
   import LatLonForm from '../components/LatLonForm.svelte'
   import LoadingSpinner from '../components/LoadingSpinner.svelte'
   import Forecast from '../components/WeatherApiForecastTable.svelte'
@@ -18,7 +18,8 @@
     loading = true
     $wwx = await get($loc.lat, $loc.lon, days)
     $mel = await mapquestEsa($loc.lat, $loc.lon, sampleRes, cellWidth)
-    $uel = await usgsEsa($loc.lat, $loc.lon, sampleRes, cellWidth)
+    // $uel = await usgsEsa($loc.lat, $loc.lon, sampleRes, cellWidth)
+    // $gel = await gmapEsa($loc.lat, $loc.lon, sampleRes, cellWidth)
     loading = false
   }
 </script>
