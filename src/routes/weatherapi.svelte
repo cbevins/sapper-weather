@@ -2,6 +2,7 @@
   import { loc, wwx } from './_stores.js'
   import { get } from './_weatherApi.js'
   import LatLonForm from '../components/LatLonForm.svelte'
+  import LoadingSpinner from '../components/LoadingSpinner.svelte'
   import Forecast from '../components/WeatherApiForecastTable.svelte'
 
   let days = 3
@@ -25,7 +26,7 @@
 <LatLonForm callback={getWeather} />
 
 {#if loading}
-  <h3>Fetching forecast data from WeatherApi.com ...</h3>
+  <LoadingSpinner msg='Fetching forecast data from WeatherApi.com ...' />'
 {/if}
 
 <Forecast wx={$wwx}/>

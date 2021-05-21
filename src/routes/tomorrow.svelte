@@ -2,6 +2,7 @@
   import { loc, twx } from './_stores.js'
   import { get } from './_tomorrow.js'
   import LatLonForm from '../components/LatLonForm.svelte'
+  import LoadingSpinner from '../components/LoadingSpinner.svelte'
   import Hourly from '../components/TomorrowHourlyTable.svelte'
 
   let hours = 72
@@ -21,7 +22,7 @@
 <LatLonForm callback={getWeather} />
 
 {#if loading}
-  <h1>Fetching forecast from tomorrow.io ...</h1>
+  <LoadingSpinner msg='Fetching forecast data from tomorrow.io ...' />'
 {/if}
 
 {#if $twx !== null}
