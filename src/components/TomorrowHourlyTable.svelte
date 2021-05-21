@@ -1,5 +1,7 @@
 <script>
-  export let hours
+  export let twx
+  let hours
+  $: hours = (twx === null) ? null : twx.data.timelines[0].intervals
 
   function dirText (deg) {
     const text = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N']
@@ -38,6 +40,11 @@
     ['8000', 'Thunderstorm']
   ])
 </script>
+
+{#if twx !== null}
+  {#if twx.status !== 200}
+    <h1>{twx.status} {twx.statusText}</h1>
+  {/if}
 
 <div class="card">
   <div class="card-body">
@@ -110,6 +117,7 @@
     </div>
   </div>
 </div>
+{/if}
 
 <style>
 td {

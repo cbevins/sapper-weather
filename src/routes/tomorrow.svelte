@@ -3,7 +3,7 @@
   import { get } from './_tomorrow.js'
   import LatLonForm from '../components/LatLonForm.svelte'
   import LoadingSpinner from '../components/LoadingSpinner.svelte'
-  import Hourly from '../components/TomorrowHourlyTable.svelte'
+  import Forecast from '../components/TomorrowHourlyTable.svelte'
 
   let hours = 72
   let loading = false
@@ -25,9 +25,4 @@
   <LoadingSpinner msg='Fetching forecast data from tomorrow.io ...' />'
 {/if}
 
-{#if $twx !== null}
-  {#if $twx.status !== 200}
-    <h1>{$twx.status} {$twx.statusText}</h1>
-  {/if}
-  <Hourly hours={$twx.data.timelines[0].intervals}/>
-{/if}
+<Forecast twx={$twx}/>
