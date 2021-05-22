@@ -15,7 +15,7 @@ import { locationGrid } from './_slopeAspect.js'
  */
 export const mapquestEsa = async (lat0, lon0, sampleRes, cellWidth) => {
   try {
-    const url = 'http://open.mapquestapi.com/elevation/v1/profile'
+    const url = 'https://open.mapquestapi.com/elevation/v1/profile'
     const key = 'd7ghMP8OtMz17DubWO3qsTPZTzXKfbY1'
     const parms = `?key=${key}&shapeFormat=raw&unit=f&`
 
