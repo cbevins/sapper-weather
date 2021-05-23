@@ -7,5 +7,4 @@ export function esaFinish (loc, egrid) {
   loc.slopeDeg = slope
   loc.slopeRatio = Math.tan(slope * Math.PI / 180)
   loc.aspect = aspect
-  loc.egrid = egrid
 }
