@@ -52,6 +52,7 @@
 	<ul>
 		<li><a aria-current="{segment === undefined ? 'page' : undefined}" href=".">home</a></li>
 		<li><a aria-current="{segment === 'location' ? 'page' : undefined}" href="1location">1: Location</a></li>
+		<li><a aria-current="{segment === 'esa' ? 'page' : undefined}" href="2esa">2: Elev</a></li>
 		<li><a aria-current="{segment === 'about' ? 'page' : undefined}" href="about">about</a></li>
 		<li><a aria-current="{segment === 'weatherapi' ? 'page' : undefined}" href="weatherapi">weatherapi.com</a></li>
 		<li><a aria-current="{segment === 'tomorrow' ? 'page' : undefined}" href="tomorrow">tomorrow.io</a></li>

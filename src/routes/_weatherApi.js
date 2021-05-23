@@ -48,6 +48,11 @@ export const timezone = async (q) => {
     const json = await response.json()
     json.location.query = q
     json.location.error = (json.error !== undefined) ? json.error : {code: 0, message: 'OK'}
+    if (q.includes(',')) { // is this a lat,lon query
+      const [lat, lon] = q.split(',')
+      json.location.lat = parseFloat(lat)
+      json.location.lon = parseFloat(lon)
+    }
     return json.location
   } catch (error) {
     console.log('ERROR _weatherApi.js timezone(): ', error)

@@ -1,26 +1,48 @@
 <script>
-  import { loc } from './_stores.js'
+  import { loc, mel, uel } from './_stores.js'
+  import { mapquestEsa } from './_mapquest.js'
   import { timezone } from './_weatherApi.js'
+  import { usgsEsa } from './_usgsEpqs.js'
   import LoadingSpinner from '../components/LoadingSpinner.svelte'
 
-  let loading = false
-  let param = '46.859340,-113.975528'
-  let search = null
+  let param = '46.859340,-113.975528' // The 'M'
+
+  let sampleRes = 1 / (60 * 60 * 3) // 1/3 arc-second in decimal degrees
+  let cellWidth = 3 // Double sample distance to ensure adjacent cells have different sample
+
+  let search = $loc
+  let loadingLocation = false
+  let loadingMapquestElev = false
+  let loadingUsgsEpqs = false
   let useButtonText = 'Use this Location'
   let useButtonColor = 'btn-outline-primary'
 
   const getLocation = async () => {
-    loading = true
+    loadingLocation = true
     search = await timezone(param)
     useButtonText = 'Use this Location'
     useButtonColor = 'btn-outline-primary'
-    loading = false
+    loadingLocation = false
+  }
+
+  const getMapquestElev = async () => {
+    loadingMapquestElev = true
+    $mel = await mapquestEsa($loc.lat, $loc.lon, sampleRes, cellWidth)
+    loadingMapquestElev = false
+  }
+
+  const getUsgsEpqs = async () => {
+    loadingUsgsEpqs = true
+    $uel = await usgsEsa($loc.lat, $loc.lon, sampleRes, cellWidth)
+    loadingUsgsEpqs = false
   }
 
   function applyLocation () {
     $loc = search
     useButtonText = 'Current Location'
     useButtonColor = 'btn-outline-success'
+    getMapquestElev()
+    getUsgsEpqs()
   }
 </script>
 
@@ -63,8 +85,16 @@
   </div>
 </div>
 
-{#if loading}
+{#if loadingLocation}
   <LoadingSpinner msg='Fetching location data from WeatherApi.com ...' />'
+{/if}
+
+{#if loadingMapquestElev}
+  <LoadingSpinner msg='Fetching elevation data from MapQuest.com ...' />'
+{/if}
+
+{#if loadingUsgsEpqs}
+  <LoadingSpinner msg='Fetching elevation data from USGS.gov ...' />'
 {/if}
 
 {#if search !== null}

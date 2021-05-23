@@ -27,7 +27,6 @@
   const getMapquestElev = async () => {
     loadingMapquestElev = true
     $mel = await mapquestEsa($loc.lat, $loc.lon, sampleRes, cellWidth)
-    console.log($mel)
     loadingMapquestElev = false
   }
 

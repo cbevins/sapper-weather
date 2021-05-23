@@ -40,7 +40,6 @@ export const mapquestEsa = async (lat0, lon0, sampleRes, cellWidth) => {
       elevationGrid.push(e.height)
       loc.cells[idx].elev = e.height // add individual cell elevations
     })
-
     // Add elevations to the *loc.cells* object array and also center cell's elev, slope, aspect
     esaFinish(loc, elevationGrid)
     return loc
