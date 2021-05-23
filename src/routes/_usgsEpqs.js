@@ -2,6 +2,7 @@
  * USGS Elevation Point Query Service
  */
 import axios from 'axios'
+import { esaFinish } from './_esaFinish.js'
 import { locationGrid, slopeAspect } from './_slopeAspect.js'
 
 /**
@@ -11,12 +12,15 @@ import { locationGrid, slopeAspect } from './_slopeAspect.js'
  * @param {number} lon  Center cell longitude east (+) or west (-)
  * @param {number} sampleRes Sample resolution in decimal degrees (usually 1/3 arc-second)
  * @param {number} cellWidth Cell width (and height) in sampleRes units
- * @returns {object} {lat, lon, elev, slopeDeg, slopeRatio, aspect, cells, nsMeters, ewMeters, nsDegrees, ewDegrees}
+ * @returns { lat, lon, sampleRes, cellWidth, cell, nsMeters, ewMeters, nsDegrees, ewDegrees,
+ *  slopeDeg, slopeRatio, aspect }
  */
 export const usgsEsa = async (lat0, lon0, sampleRes, cellWidth) => {
   try {
     const url = 'https://nationalmap.gov/epqs/pqs.php?units=Feet&output=json&'
 
+    // Get a 3x3 grid of *equi-distant* (meters, not degrees) sample points
+    // loc = { lat, lon, sampleRes, cellWidth, cell[], nsMeters, ewMeters, nsDegrees, ewDegrees }
     const loc = locationGrid(lat0, lon0, sampleRes, cellWidth)
 
     // Create query string of cell center [lat,lon] pairs
@@ -37,13 +41,7 @@ export const usgsEsa = async (lat0, lon0, sampleRes, cellWidth) => {
     })
 
     // Add elevations to the *loc.cells* object array and also center cell's elev, slope, aspect
-    const [slope, aspect] = slopeAspect(elevationGrid, 3.2808 * loc.ewMeters, 3.2808 * loc.nsMeters)
-    loc.lat = lat0
-    loc.lon = lon0
-    loc.elev = elevationGrid[4]
-    loc.slopeDeg = slope
-    loc.slopeRatio = Math.tan(slope * Math.PI / 180)
-    loc.aspect = aspect
+    esaFinish(loc, elevationGrid)
     return loc
   } catch (error) {
     console.error('_usgsEpqs.js error: ' + error)
