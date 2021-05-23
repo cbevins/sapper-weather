@@ -36,14 +36,15 @@ export function compassDir (deg) {
  * @param {number} lon0  Center cell longitude east (+) or west (-)
  * @param {number} sampleRes Sample resolution in decimal degrees (usually 1/3 arc-second)
  * @param {number} cellWidth Cell width (and height) in sampleRes units
- * @returns { cell, nsDist, ewMeters, nsMeters, ewDegrees, sampleRes, cellWidth } where
- * - cell is 3x3 array of cell center {lat, lon} objects
+ * @returns { lat, lon, sampleRes, cellWidth, cell, nsMeters, ewMeters, nsDegrees, ewDegrees }
+ * where
+ * - sampleRes is the specified sample resolution in decimal degrees (usually 1/3 arc-second)
+ * - cellWidth is the specified cell width (and height) in sampleRes units
+ * - cell is a 3x3 array of cell center {lat, lon} objects
  * - nsMeters is north-south distance between cell centers (m)
  * - ewMeters is east-west distance between cell centers (m)
  * - nsDegrees is north-south distance between cell centers in decimal degrees
  * - ewDegrees is east-west distance between cell centers in decimal degrees
- * - sampleRes is the specified sample resolution in decimal degrees (usually 1/3 arc-second)
- * - cellWidth is the specified cell width (and height) in sampleRes units
  *
  * We want elevations for 3x3 grid of evenly spaced cells at elevation sample resolution.
  * But while decimal degrees are uniform in north-south (y) dimension, they approach
@@ -66,7 +67,8 @@ export function locationGrid (lat0, lon0, sampleRes, cellWidth) {
       cells.push({ lat, lon })
     })
   })
-  return { cells, nsMeters, ewMeters, nsDegrees, ewDegrees, sampleRes, cellWidth, lat: lat0, lon: lon0 }
+  return {lat: lat0, lon: lon0, sampleRes, cellWidth,
+    cells, nsMeters, ewMeters, nsDegrees, ewDegrees}
 }
 
 export function slope (z, xdim, ydim) {
