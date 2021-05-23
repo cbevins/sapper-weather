@@ -1,8 +1,6 @@
 <script>
-  import { compassDir } from '../routes/_slopeAspect.js'
   export let current
   export let location
-  export let esa
 </script>
 
 <div class="card">
@@ -10,12 +8,6 @@
     <h4 class='card-title'>
       {location.name}, {location.region}, {location.country} [{location.lat}, {location.lon}]
     </h4>
-
-    {#if esa !== null}
-    <h6>Elevation {Math.round(esa.elev)} ft,
-      Slope {Math.round(100 * esa.slopeRatio)} &percnt; ({Math.round(esa.slopeDeg)} &deg;),
-      Aspect {Math.round(esa.aspect)} ({compassDir(esa.aspect)})</h6>
-    {/if}
 
     <h4 class="card-title">
       Current Conditions

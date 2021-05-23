@@ -57,7 +57,6 @@ export function locationGrid (lat0, lon0, sampleRes, cellWidth) {
   const ewMeters = distance(lat0, lon0, lat0, lon0 + nsDegrees)
   // Determine east-west decimal degrees with same distance as north-south decimal degrees at this lat
   const ewDegrees = nsDegrees * nsMeters / ewMeters
-  console.log('lat', lat0, 'lon', lon0, 'nsDegrees', nsDegrees, 'nsMeters', nsMeters, 'ewMeters', ewMeters, 'ewDegrees', ewDegrees)
   // Create the 3x3 grid of [lat, lon]
   const cells = []
   ;[-1, 0, 1].forEach(y => {

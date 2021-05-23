@@ -12,8 +12,10 @@ import { locationGrid } from './_slopeAspect.js'
  */
 export const gmapEsa = async (lat0, lon0, sampleRes, cellWidth) => {
   try {
-    const url = 'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/elevation/json'
+    // const url = 'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/elevation/json'
+    const url = 'https://maps.googleapis.com/maps/api/elevation/json'
     const key = 'AIzaSyA3U2TX-TtGBiOpLBG1TIl8E5kRtpaIFUk'
+    // const example = 'https://maps.googleapis.com/maps/api/elevation/json?locations=47,-114&key=AIzaSyA3U2TX-TtGBiOpLBG1TIl8E5kRtpaIFUk'
 
     // Get a 3x3 grid of *equi-distant* (meters, not degrees) sample points
     const loc = locationGrid(lat0, lon0, sampleRes, cellWidth)
@@ -27,6 +29,7 @@ export const gmapEsa = async (lat0, lon0, sampleRes, cellWidth) => {
     const response = await fetch(query, { method: 'GET' })
       .catch((error) => console.error('maps.googleapis.com fetch error: ' + error))
     console.log(response)
+    return loc
     const json = await response.json()
     console.log(json)
     // Repackage response into 3x3 elevation grid (in meters)

@@ -1,7 +1,8 @@
 <script>
-  import { loc, mel, uel } from './_stores.js'
+  import { loc, mel, twx, uel, wwx } from './_stores.js'
   import { mapquestEsa } from './_mapquest.js'
-  import { timezone } from './_weatherApi.js'
+  import { forecast, timezone } from './_weatherApi.js'
+  import { timelines } from './_tomorrow.js'
   import { usgsEsa } from './_usgsEpqs.js'
   import LoadingSpinner from '../components/LoadingSpinner.svelte'
 
@@ -13,9 +14,21 @@
   let search = $loc
   let loadingLocation = false
   let loadingMapquestElev = false
+  let loadingTomorrow = false
   let loadingUsgsEpqs = false
+  let loadingWeatherApi = false
   let useButtonText = 'Use this Location'
   let useButtonColor = 'btn-outline-primary'
+
+  function applyLocation () {
+    $loc = search
+    useButtonText = 'Current Location'
+    useButtonColor = 'btn-outline-success'
+    getMapquestElev()
+    getUsgsEpqs()
+    getTomorrow()
+    getWeatherApi()
+  }
 
   const getLocation = async () => {
     loadingLocation = true
@@ -31,18 +44,24 @@
     loadingMapquestElev = false
   }
 
+  const getTomorrow = async () => {
+    const hours = 72
+    loadingTomorrow = true
+    $twx = await timelines($loc.lat, $loc.lon, $loc.tz_id, hours)
+    loadingTomorrow = false
+  }
+
   const getUsgsEpqs = async () => {
     loadingUsgsEpqs = true
     $uel = await usgsEsa($loc.lat, $loc.lon, sampleRes, cellWidth)
     loadingUsgsEpqs = false
   }
 
-  function applyLocation () {
-    $loc = search
-    useButtonText = 'Current Location'
-    useButtonColor = 'btn-outline-success'
-    getMapquestElev()
-    getUsgsEpqs()
+  const getWeatherApi = async () => {
+    const days = 3
+    loadingWeatherApi = true
+    $wwx = await forecast($loc.lat, $loc.lon, days)
+    loadingWeatherApi = false
   }
 </script>
 
@@ -93,8 +112,16 @@
   <LoadingSpinner msg='Fetching elevation data from MapQuest.com ...' />'
 {/if}
 
+{#if loadingTomorrow}
+  <LoadingSpinner msg='Fetching weather data from Toimorrow.io ...' />'
+{/if}
+
 {#if loadingUsgsEpqs}
   <LoadingSpinner msg='Fetching elevation data from USGS.gov ...' />'
+{/if}
+
+{#if loadingWeatherApi}
+  <LoadingSpinner msg='Fetching weather data from WeatherAPI.com ...' />'
 {/if}
 
 {#if search !== null}

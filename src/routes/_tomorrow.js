@@ -1,7 +1,7 @@
 import moment from 'moment'
 import queryString from 'query-string'
 
-export const get = async (lat, lon, timezone, hours) => {
+export const timelines = async (lat, lon, timezone, hours) => {
   try {
     let json
     const url = 'https://api.tomorrow.io/v4/timelines'

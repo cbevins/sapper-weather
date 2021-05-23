@@ -1,5 +1,6 @@
 <script>
   import { compassDir } from '../routes/_slopeAspect.js'
+  // export let loc
   export let twx
   let hours
   $: hours = (twx === null) ? null : twx.data.timelines[0].intervals
