@@ -1,6 +1,7 @@
-export const get = async (lat, lon, ndays) => {
+const key = '43956b1f6760417db1d182743212704'
+
+export const forecast = async (lat, lon, ndays) => {
   const url = 'https://api.weatherapi.com/v1/forecast.json'
-  const key = '43956b1f6760417db1d182743212704'
   const query = `${url}?key=${key}&days=${ndays}&q=${lat},${lon}&aqi=no&alerts=no`
   try {
     const response = await fetch(query, { method: 'GET' })
@@ -8,7 +9,48 @@ export const get = async (lat, lon, ndays) => {
     const json = await response.json()
     return addFireWeather(json)
   } catch (error) {
-    console.log('ERROR _weatherApi.js grab(): ', error)
+    console.log('ERROR _weatherApi.js forecast(): ', error)
+  }
+}
+
+/**
+ * Fetches location infor from WeatherAPI.com timezone
+ *
+ * @param {any} q Query parameter based on which data is sent back. It could be following:
+ * - Latitude and Longitude (Decimal degree) e.g: q=48.8567,2.3508
+ * - city name e.g.: q=Paris
+ * - US zip e.g.: q=10001
+ * - UK postcode e.g: q=SW1
+ * - Canada postal code e.g: q=G2J
+ * - metar: <metar code> e.g: q=metar:EGLL
+ * - iata: <3 digit airport code> e.g: q=iata:DXB
+ * - auto:ip IP lookup e.g: q=auto:ip
+ * - IP address (IPv4 and IPv6 supported) e.g: q=100.0.0.1
+ * @returns {object} {
+    "name": "Missoula",
+    "region": "Montana",
+    "country": "USA",
+    "lat": 46.86,
+    "lon": -114.04,
+    "tz_id": "America/Denver",
+    "localtime_epoch": 1621784749,
+    "localtime": "2021-05-23 9:45",
+    "query": "search query",
+    "error": { code: 0, message: 'Ok'}
+  }
+ */
+export const timezone = async (q) => {
+  const url = 'https://api.weatherapi.com/v1/timezone.json'
+  const query = `${url}?key=${key}&q=${q}`
+  try {
+    const response = await fetch(query, { method: 'GET' })
+      .catch((error) => console.error('weatherap.com fetch error: ' + error))
+    const json = await response.json()
+    json.location.query = q
+    json.location.error = (json.error !== undefined) ? json.error : {code: 0, message: 'OK'}
+    return json.location
+  } catch (error) {
+    console.log('ERROR _weatherApi.js timezone(): ', error)
   }
 }
 
