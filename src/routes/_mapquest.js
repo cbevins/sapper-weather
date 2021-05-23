@@ -11,7 +11,8 @@ import { locationGrid } from './_slopeAspect.js'
  * @param {number} lon  Center cell longitude east (+) or west (-)
  * @param {number} sampleRes Sample resolution in decimal degrees (usually 1/3 arc-second)
  * @param {number} cellWidth Cell width (and height) in sampleRes units
- * @returns {object} {lat, lon, elev, slopeDeg, slopeRatio, aspect, cells, nsMeters, ewMeters, nsDegrees, ewDegrees}
+ * @returns { lat, lon, sampleRes, cellWidth, cell, nsMeters, ewMeters, nsDegrees, ewDegrees,
+ *  slopeDeg, slopeRatio, aspect }
  */
 export const mapquestEsa = async (lat0, lon0, sampleRes, cellWidth) => {
   try {
@@ -20,6 +21,7 @@ export const mapquestEsa = async (lat0, lon0, sampleRes, cellWidth) => {
     const parms = `?key=${key}&shapeFormat=raw&unit=f&`
 
     // Get a 3x3 grid of *equi-distant* (meters, not degrees) sample points
+    // loc = { lat, lon, sampleRes, cellWidth, cell[], nsMeters, ewMeters, nsDegrees, ewDegrees }
     const loc = locationGrid(lat0, lon0, sampleRes, cellWidth)
 
     // Create query string of cell center [lat,lon] pairs
