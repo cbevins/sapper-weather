@@ -1,11 +1,7 @@
 import { writable } from 'svelte/store';
 
-export const loc = writable({
-  lat: 46.859340,
-  lon: -113.975528,
-  tz: 'America/Denver',
-  name: 'The "M"'
-})
+// WeatherAPI Location object returned by surrent, forecast, and timezone services
+export const loc = writable(null)
 
 // Google elevation data store
 export const gel = writable(null)
