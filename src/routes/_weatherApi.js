@@ -59,38 +59,66 @@ export const timezone = async (q) => {
   }
 }
 
-// Repackages the WeatherApi.com json response into an array FireWeather objects with 15 properties
+// Adds fire behavior input values to each hourly forecast
 function addFireWeather (json) {
-  json.fire = []
   json.forecast.forecastday.forEach(d => {
-    // Note that this service has d.astro.sunrise, .sunset, .moonrise, .moonset, .moon_phase, and .moon_illumination
     d.hour.forEach(h => {
-      json.fire.push({
-        date: d.date,
-        time: h.time.substr(11, 5),
-        dryBulb: h.temp_f, // oF
-        humidity: h.humidity, // relative humidity (%)
-        dewPoint: h.dewpoint_f, // dewpoint temperature (oF)
-        windSpeed: h.wind_mph, // wind speed at ??? (mi/h)
-        windGust: h.gust_mph,
-        windFrom: h.wind_degree, // direction from which the wind originates, degrees clockwise from north
-        precipRate: h.precip_in, // in/hr
-        precipProb: parseFloat(h.chance_of_rain), // % NOTE: chance_of_rain is a numeric string
-        cloudCover: h.cloud, // %
-        visibility: h.vis_miles, // mi
-        wthrCode: h.condition.code, // code
-        feelsLike: h.feelslike_f, // apparent temperature at 2-m (oF)
-        atmSurface: h.pressure_in, // weight of the air above the surface (at the surface level) (in/Hg)
-
-        // Items below here are unique to this service
-        // icon: h.condition.icon,
-        // text: h.condition.text,
-        // heatIndex: h.heatindex_f,
-        // windChill: h.windchill_f,
-        // uv: h.uv,
-        // snowProb: parseFloat(h.chance_of_snow) // % NOTE: chance_of_snow is a numeric string
-      })
+      h.fire = {
+        input: {
+          month: +(h.time).substr(5, 2),
+          hour: +(h.time).substr(11, 2),
+          dryBulb: h.temp_f,
+          humidity: 0.01 * h.humidity,
+          shading: 0.01 * h.cloud,
+          windAt10m: 88 * h.wind_mph,
+          windGust: 88 * h.gust_mph,
+          windFrom: h.wind_degree
+        },
+        output: {}
+      }
     })
   })
   return json
 }
+
+// // Converts a Current object into an Hour object
+// function asHour (c) {
+//   return {
+//   time_epoch: c.last_updated_epoch, //	int	Time as epoch
+//   time: c.last_updated, // string	Date and time
+//   temp_c:	c.temp_c, // decimal	Temperature in celsius
+//   temp_f: c.temp_f, // decimal	Temperature in fahrenheit
+//   condition: {
+//     text: c.condition.text, // string	Weather condition text
+//     icon: c.condition.icon, // string	Weather condition icon
+//     code: c.condition.code, // int	Temperature in code
+//   },
+//   wind_mph: c.wind_mph, // decimal	Maximum wind speed in miles per hour
+//   wind_kph: c.wind_kph, // decimal	Maximum wind speed in kilometer per hour
+//   wind_degree: c.wind_degree, // int	Wind direction in degrees
+//   wind_dir: c.wind_dir, // string	Wind direction as 16 point compass. e.g.: NSW
+//   pressure_mb: c.pressure_mb, // decimal	Pressure in millibars
+//   pressure_in: c.pressure_in, // decimal	Pressure in inches
+//   precip_mm: c.precip_mm, // decimal	Precipitation amount in millimeters
+//   precip_in: c.precip_in, // decimal	Precipitation amount in inches
+//   humidity: c.humidity, //		int	Humidity as percentage
+//   cloud: c.cloud, //		int	Cloud cover as percentage
+//   feelslike_c: c.feelslike_c, //		decimal	Feels like temperature as celcius
+//   feelslike_f: c.feelslike_f, //		decimal	Feels like temperature as fahrenheit
+//   windchill_c: null, //		decimal	Windchill temperature in celcius
+//   windchill_f: null, //		decimal	Windchill temperature in fahrenheit
+//   heatindex_c: null, //		decimal	Heat index in celcius
+//   heatindex_f: null, //		decimal	Heat index in fahrenheit
+//   dewpoint_c: null, //		decimal	Dew point in celcius
+//   dewpoint_f: null, //		decimal	Dew point in fahrenheit
+//   will_it_rain: null, //		int	1 = Yes 0 = No
+//   will_it_snow: null, //		int	1 = Yes 0 = No
+//   is_day: null, //		int	1 = Yes 0 = No Whether to show day condition icon or night icon
+//   vis_km: null, //		decimal	Visibility in kilometer
+//   vis_miles: null, //		decimal	Visibility in miles
+//   chance_of_rain: null, //		int	Chance of rain as percentage
+//   chance_of_snow: null, //		int	Chance of snow as percentage
+//   gust_mph: c.gust_mph, //		decimal	Wind gust in miles per hour
+//   gust_kph: c.gust_kph, //
+//   }
+// }

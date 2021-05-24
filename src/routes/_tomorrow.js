@@ -69,50 +69,31 @@ export const timelines = async (lat, lon, timezone, hours) => {
     }
     json.status = response.status
     json.statusText = response.statusText
-    return json
+    return addFireWeather(json)
   } catch (error) {
     const msg = `Unable to access api end pount at ${url}`
     throw new Error(msg)
   }
 }
 
-// Repackages the Tomorrow.io json response into an array FireWeather objects with 15 properties
+// Adds fire behavior input values to each hourly forecast
 function addFireWeather (json) {
-  json.fire = []
   const intervals = json.data.timelines[0].intervals // this is the '1h' timeline
   intervals.forEach(interval => {
     const wx = interval.values
-    json.fire.push({
-      date: interval.startTime.substr(0, 10),
-      time: interval.startTime.substr(11, 5),
-      dryBulb: wx.temperature, // dry bulb temperature at 2-m (oF)
-      humidity: wx.humidity, // relative humidity (%)
-      dewPoint: wx.dewPoint, // dewpoint temperature at 2-m (oF)
-      windSpeed: wx.windSpeed, // wind speed at 10-m (mi/h)
-      windGust: wx.windGust, // maximum brief increase in wind speed at 10-m, usually less than 20 seconds (mi/h)
-      windFrom: wx.windDirection, // direction from which the wind originates, degrees clockwise from north
-      precipRate: wx.precipitationIntensity, // in/hr
-      precipProb: wx.precipitationProbability, // %
-      cloudCover: wx.cloudCover, // %
-      visibility: wx.visibility, // mi
-      wthrCode: wx.weatherCode, // code
-      feelsLike: wx.temperatureApparent, // apparent temperature at 2-m (oF)
-      atmSurface: wx.pressureSurfaceLevel, // weight of the air above the surface (at the surface level) (in/Hg)
-
-      // Items below here are unique to this service
-      // precipType: wx.precipitationType, // 0=N/A 1=Rain 2=Snow 3=Freezing Rain 4=Ice Pellets
-      // atmSea: wx.pressureSeaLevel, // weight of the air above the surface (at mean sea level) (in/Hg)
-      // cloudBase: wx.cloudBase, // mi
-      // cloudCeil: wx.cloudCeiling, // mi
-      // fwi: wx.fireIndex, // Fosberg Fire Weather Index
-      // snowAcc: wx.snowAccumulation, // The trailing amount of new snowfall that has or will have occurred over the last hour of the requested time (in)
-      // iceAcc: wx.iceAccumulation, // The trailing amount of ice that has or will have occurred over the last hour of the requested time (in)
-      // soilMois0: wx.soilMoistureVolumetric0To10, // % at 0-10 cm
-      // soilTemp0: wx.soilTemperature0To10, // oF
-      // solarGHI: wx.solarGHI, // Btu/ft2  (total amount of shortwave radiation received from above by a surface horizontal to the ground)
-      // solarDNI: wx.solarDNI, // Btu/ft2 (diffuse (i.e., scattered) component of GHI reaching the surface of the earth at each point)
-      // solarDHI: wx.solarDHI // Btu/ft2 (direct component of GHI reaching the surface of the earth at each point)
-    })
+    wx.fire = {
+      input: {
+        month: +(interval.startTime.substr(5, 2)),
+        hour: +(interval.startTime.substr(11, 2)),
+        dryBulb: wx.temperature,
+        humidity: 0.01 * wx.humidity,
+        shading: 0.01 * wx.cloudCover,
+        windAt10m: 88 * wx.windSpeed,
+        windGust: 88 * wx.windGust,
+        windFrom: wx.windDirection
+      },
+      output: {}
+    }
   })
   return json
 }
