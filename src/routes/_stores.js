@@ -22,5 +22,8 @@ export const twx = writable(null)
 // USGS elevation data store
 export const uel = writable(null)
 
+// units-of-measure 'usc', 'uss', or 'si'
+export const uom = writable('usc')
+
 // WeatherApi.com data store
 export const wwx = writable(null)
