@@ -1,9 +1,17 @@
 <script>
   import { compassDir } from '../routes/_slopeAspect.js'
+  export let uom // usc, uss, si
+
   // export let loc
   export let twx
   let hours
   $: hours = (twx === null) ? null : twx.data.timelines[0].intervals
+
+  function dist (v) { return (uom === 'si') ? 1.60934 * v : v } // mi or km
+  function press (v) { return (uom === 'si') ? 33.863886666667 * v : v } // in Hg or hectoPascal
+  function rain (v) { return (uom === 'si') ? 25.4 * v : v } // in or mm
+  function temp (v) { return (uom === 'si') ? (5 * (v-32) / 9) : v } // oF or oC
+  function wind (v) { return (uom === 'si') ? 1.60934 * v : v } // mi/h or km/h
 
   const SowText = new Map([
     ['0', 'Unknown'],
@@ -49,49 +57,85 @@
       <table class="table table-sm table-striped table-bordered border-primary">
         <thead class='table-light border-primary'>
           <tr>
+            <th scope='row'>Date</th>
             <th scope='row'>Time</th>
-            <th scope="col">Temp</th><th scope="col">Rel Hum</th><th>Dew Pt</th><th scope="col">Feels</th>
+            <th scope="col">Temp</th>
+            <th scope="col">Rel Hum</th>
+            <th>Dew Pt</th>
+            <th scope="col">Feels Like</th>
             <th colspan='2' scope="col">State of Weather</th>
             <th colspan='4' scope="col">Wind</th>
             <th colspan='2' scope="col">Precip</th>
             <th scope="col">Cloud</th>
             <th scope="col">Visib</th>
-            <th scope="col">UV</th>
             <th scope="col">Press</th>
+            <th scope="col">UV</th>
+            <th scope="col">Mon</th>
+            <th scope="col">Hr</th>
+            <th scope="col">Temp</th>
+            <th scope="col">RH</th>
+            <th scope="col">Wind</th>
+            <th scope="col">Gust</th>
+            <th scope="col">From</th>
+            <th scope="col">Shading</th>
           </tr>
           <tr>
-            <th></th>
-            <th scope="col">oF</th><th scope="col">%</th><th scope="col">oF</th><th scope="col">Like</th>
-            <th scope="col">Code</th><th scope="col">Text</th>
-            <th scope="col">mi/h</th><th scope="col">Gust</th><th scope="col">From</th><th scope="col">Dir</th>
+            <th></th><th></th>
+            <th scope="col">{uom==='si' ? 'oC' : 'oF'}</th>
+            <th scope="col">%</th>
+            <th scope="col">{uom==='si' ? 'oC' : 'oF'}</th>
+            <th scope="col">{uom==='si' ? 'oC' : 'oF'}</th>
+            <th scope="col">Code</th>
+            <th scope="col">Text</th>
+            <th scope="col">{uom==='si' ? 'km/h' : 'mi/h'}</th>
+            <th scope="col">Gust</th>
+            <th scope="col">From</th>
+            <th scope="col">Dir</th>
             <th scope="col">Prob</th>
-            <th scope="col">in</th>
+            <th scope="col">{uom==='si' ? 'mm/h' : 'in/h'}</th>
             <th scope="col">Cover</th>
-            <th scope="col">mi</th>
+            <th scope="col">{uom==='si' ? 'km' : 'mi'}</th>
+            <th scope="col">{uom==='si' ? 'hPa' : 'in Hg'}</th>
             <th scope="col">Idx</th>
-            <th scope="col">in Hg</th>
+            <th></th>
+            <th></th>
+            <th>oF</th>
+            <th>ratio</th>
+            <th>ft/min</th>
+            <th>ft/min</th>
+            <th>deg</th>
+            <th>ratio</th>
           </tr>
         </thead>
         <tbody>
           {#each hours as h}
             <tr>
+              <td>{h.startTime.substr(0, 10)}</td>
               <td>{h.startTime.substr(11, 5)}</td>
-              <td>{Math.round(h.values.temperature)}</td>
+              <td>{Math.round(temp(h.values.temperature))}</td>
               <td>{Math.round(h.values.humidity)}</td>
-              <td>{Math.round(h.values.dewPoint)}</td>
-              <td>{Math.round(h.values.temperatureApparent)}</td>
+              <td>{Math.round(temp(h.values.dewPoint))}</td>
+              <td>{Math.round(temp(h.values.temperatureApparent))}</td>
               <td>{h.values.weatherCode}</td>
               <td>{SowText.get(h.values.weatherCode.toString())}</td>
-              <td>{Math.round(h.values.windSpeed)}</td>
-              <td>{Math.round(h.values.windGust)}</td>
+              <td>{Math.round(wind(h.values.windSpeed))}</td>
+              <td>{Math.round(wind(h.values.windGust))}</td>
               <td>{Math.round(h.values.windDirection)}</td>
               <td>{compassDir(h.values.windDirection)}</td>
               <td>{h.values.precipitationProbability}</td>
-              <td>{h.values.precipitationIntensity}</td>
+              <td>{rain(h.values.precipitationIntensity).toFixed(2)}</td>
               <td>{Math.round(h.values.cloudCover)}</td>
-              <td>{Math.round(h.values.visibility)}</td>
+              <td>{Math.round(dist(h.values.visibility))}</td>
+              <td>{press(h.values.pressureSurfaceLevel).toFixed(2)}</td>
               <td>UV</td>
-              <td>{h.values.pressureSurfaceLevel}</td>
+                <td>{h.values.fire.input.month}</td>
+                <td>{h.values.fire.input.hour}</td>
+                <td>{Math.round(h.values.fire.input.dryBulb)}</td>
+                <td>{(h.values.fire.input.humidity).toFixed(2)}</td>
+                <td>{Math.round(h.values.fire.input.windAt10m)}</td>
+                <td>{Math.round(h.values.fire.input.windGust)}</td>
+                <td>{Math.round(h.values.fire.input.windFrom)}</td>
+                <td>{(h.values.fire.input.shading).toFixed(2)}</td>
 
               <!-- <td>{h.values.precipitationType}</td>
               <td>{h.values.pressureSeaLevel}</td>

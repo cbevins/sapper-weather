@@ -1,11 +1,9 @@
 <script>
   export let astro
-  export let date
 </script>
 
 <div class="card">
   <div class="card-body">
-    <h3 class='card-title'>Sun - Moon Times for {date}</h3>
     <div class="table-responsive">
       <table class="table table-sm table-striped table-bordered border-primary">
         <thead class='table-light border-primary'>
