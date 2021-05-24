@@ -1,6 +1,6 @@
 <script>
-  import { loc, wwx } from './_stores.js'
-  import Forecast from '../components/WeatherApiForecastTable.svelte'
+  import { loc, uom, wwx } from './_stores.js'
+  import WeatherApiForecastTable from '../components/WeatherApiForecastTable.svelte'
 </script>
 
 <svelte:head><title>WeatherApi.com Forecast</title></svelte:head>
@@ -12,5 +12,5 @@
   <img src='//cdn.weatherapi.com/v4/images/weatherapi_logo.png' alt="WeatherAPI.com" border="0">
   Forecast
 </h1>
-<Forecast location={$loc} wx={$wwx}/>
+<WeatherApiForecastTable location={$loc} uom={$uom} wx={$wwx}/>
 {/if}

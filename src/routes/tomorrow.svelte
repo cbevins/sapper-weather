@@ -1,5 +1,5 @@
 <script>
-  import { loc, twx } from './_stores.js'
+  import { loc, twx, uom } from './_stores.js'
   import Forecast from '../components/TomorrowHourlyTable.svelte'
 </script>
 
@@ -8,6 +8,5 @@
 {#if $loc === null || $twx === null}
   <p>You must first <a href='1location'>select and use a location</a></p>
 {:else}
-  <h1>Tomorrow.io Weather Forecast</h1>
-  <Forecast loc={$loc} twx={$twx}/>
+  <Forecast twx={$twx} uom={$uom}/>
 {/if}
