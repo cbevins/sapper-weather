@@ -1,5 +1,5 @@
 <script>
-  import { loc, mel, twx, uel, wwx } from './_stores.js'
+  import { esa, esaSource, loc, mel, twx, uel, wwx } from './_stores.js'
   import { mapquestEsa } from './_mapquest.js'
   import { forecast, timezone } from './_weatherApi.js'
   import { timelines } from './_tomorrow.js'
@@ -12,17 +12,19 @@
   let cellWidth = 3 // Double sample distance to ensure adjacent cells have different sample
 
   let search = $loc
+  let applied = false
   let loadingLocation = false
   let loadingMapquestElev = false
   let loadingTomorrow = false
   let loadingUsgsEpqs = false
   let loadingWeatherApi = false
-  let useButtonText = 'Use this Location'
+  let useButtonText = 'Ok, use this Location'
   let useButtonColor = 'btn-outline-primary'
 
   function applyLocation () {
+    applied = true
     $loc = search
-    useButtonText = 'Current Location'
+    useButtonText = 'This is the Current Location'
     useButtonColor = 'btn-outline-success'
     getMapquestElev()
     getUsgsEpqs()
@@ -31,9 +33,10 @@
   }
 
   const getLocation = async () => {
+    applied = false
     loadingLocation = true
     search = await timezone(param)
-    useButtonText = 'Use this Location'
+    useButtonText = 'Ok, use this Location'
     useButtonColor = 'btn-outline-primary'
     loadingLocation = false
   }
@@ -41,6 +44,7 @@
   const getMapquestElev = async () => {
     loadingMapquestElev = true
     $mel = await mapquestEsa($loc.lat, $loc.lon, sampleRes, cellWidth)
+    if ($esaSource === 'MapQuest') $esa = $mel
     loadingMapquestElev = false
   }
 
@@ -54,6 +58,7 @@
   const getUsgsEpqs = async () => {
     loadingUsgsEpqs = true
     $uel = await usgsEsa($loc.lat, $loc.lon, sampleRes, cellWidth)
+    if ($esaSource === 'USGS') $esa = $uel
     loadingUsgsEpqs = false
   }
 
@@ -65,11 +70,9 @@
   }
 </script>
 
-<svelte:head>
-	<title>Location</title>
-</svelte:head>
+<svelte:head><title>Step 1: Location</title></svelte:head>
 
-<h1>1: Select a Location</h1>
+<h1>Step 1: Select a Location</h1>
 <div class="row mb-3">
   <div class="col">Search for:</div>
   <div class="col">
@@ -113,7 +116,7 @@
 {/if}
 
 {#if loadingTomorrow}
-  <LoadingSpinner msg='Fetching weather data from Toimorrow.io ...' />'
+  <LoadingSpinner msg='Fetching weather data from Tomorrow.io ...' />'
 {/if}
 
 {#if loadingUsgsEpqs}
@@ -128,18 +131,28 @@
   <div class="card">
     <div class="card-body">
       <div class="row mb-3">
-        <div class='col card-title'><strong>Search Results</strong></div>
+        <div class='col card-title'>
+          {#if applied}
+            <strong>Currently Selected Location</strong>
+          {:else}
+            <strong>Search Results</strong>
+          {/if}
+        </div>
         <div class="col">
+          {#if applied}
+            &nbsp;
+          {:else}
           <button on:click={applyLocation} class="btn {useButtonColor}">
             {useButtonText}
           </button>
+          {/if}
         </div>
       </div>
 
       <div class="table-responsive">
         <table class="table table-sm table-striped table-bordered border-primary">
           <tbody>
-            <tr><td>Search</td><td>{search.query}</td></tr>
+            <tr><td>Search Params</td><td>{search.query}</td></tr>
             <tr><td>Results</td><td>{search.error.message}</td></tr>
             <tr><td>Name</td><td>{search.name}</td></tr>
             <tr><td>Region</td><td>{search.region}</td></tr>
